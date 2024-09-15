@@ -58,7 +58,7 @@ class StimulateEnv(object):
         correctly_recommended = [] 
         rewards = [] 
         
-        print(self.newest_watched_video, recommend_item)
+        # print(self.newest_watched_video, recommend_item)
         if self.newest_watched_video in recommend_item and recommend_item not in self.old_watched:
             correctly_recommended.append(recommend_item)
             rewards.append(1)
@@ -74,7 +74,7 @@ class StimulateEnv(object):
         
         reward = rewards
         
-        if len(self.old_watched) > self.done_count or len(self.old_watched) >= self.users_history_lens:
+        if len(self.old_watched) > self.done_count: #or len(self.old_watched) >= self.users_history_lens:
             self.done = True
         
         return self.items, reward, self.done, self.old_watched

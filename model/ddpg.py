@@ -3,10 +3,10 @@ import numpy as np
 from collections import deque
 import random
 import tensorflow as tf
-from model.embedding import UserVideoEmbedding
 import sys,os
 sys.path.append(os.getcwd()) 
 
+from model.embedding import UserVideoEmbedding
 from model.actor import Actor
 from model.critic import Critic
 from model.tensorflow_grad_inverter import GradInverter as grad_inverter
@@ -46,7 +46,7 @@ class DDPG(object):
         action_bounds = [action_max, action_min]
         self.grad_inv = grad_inverter(action_bounds)
         
-        self.embedding_dim = 5 # old: 100
+        self.embedding_dim = 20 # old: 100
         self.embedding_network = UserVideoEmbedding(users_num, items_num, self.embedding_dim)
         embedding_save_file_dir = self.config.USER_MOVE_WEIGHTS
         assert os.path.exists(embedding_save_file_dir), f"embedding save file directory: '{embedding_save_file_dir}' is wrong."
@@ -100,7 +100,6 @@ class DDPG(object):
         self.critic_net.train_critic(self.state_t_batch, self.action_batch, self.y_i_batch)
 
         # Update actor proportional to the gradients:
-        print(self.state_t_batch)
         action_for_delQ = self.evaluate_actor(self.state_t_batch)
 
         if is_grad_inverter:
@@ -122,7 +121,6 @@ class DDPG(object):
             items_ids = np.array(list(set(all_items) - set(old_watched)))
             # items_ids = np.array(list(set(self.items_list) - set(recommended_items)))
 
-        
         items_ebs = self.embedding_network.get_layer('video_embedding')(items_ids)
         action = tf.expand_dims(action, axis=1)
         action = tf.transpose(action)
