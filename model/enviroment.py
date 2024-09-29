@@ -71,6 +71,8 @@ class StimulateEnv(object):
 
         if max(rewards) > 0: 
             self.items = self.items[len(correctly_recommended):] + correctly_recommended 
+        else:
+            self.items = self.items[1:].append(self.newest_watched_video)
         
         reward = rewards
         
